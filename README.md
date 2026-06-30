@@ -1,335 +1,254 @@
-[Instagram Reels Scraper](https://apify.com/viralanalyzer/instagram-reels-scraper?fpr=data)
+[Instagram Reels Scraper](https://apify.com/scraply/instagram-reels-scraper?fpr=data)
 
-# 📸 Instagram Reels & Posts Scraper — Metrics & Engagement
+## Instagram Reels Scraper
 
-> 🔗 [View on Apify Store](https://apify.com/viralanalyzer/instagram-reels-scraper) | 🇺🇸 English | 🇧🇷 Português
+The Instagram Reels Scraper is a production-ready Instagram Reels scraper tool that extracts structured metadata from public Reels at scale. It solves the pain of manual collection by providing a reliable Instagram Reels data extractor for marketers, analysts, and developers — perfect for trend tracking, content benchmarking, and research. Use it as a bulk Instagram Reels scraper in workflows for analytics, enrichment, or automation, and export clean datasets for your BI stack.
 
-Extract **Instagram posts, Reels, and Carousels** with full engagement metrics. Get likes, comments, video views, hashtags, captions, and content type for any public profile. Playwright-based multi-strategy scraping with cookie seeding, API interception, embedded JSON parsing, and DOM extraction. No API key required.
+## What data / output can you get?
 
-## ✨ Features
+Here are the main fields this Instagram Reels metadata scraper returns in the dataset. Values below are real examples taken from public reels.
 
-- 📝 **Posts, Reels & Carousels** — Scrape all content types from public profiles
-- 📊 **Full engagement metrics** — Likes, comments, video views, video duration
-- 🏷️ **Hashtag extraction** — Automatic extraction from captions
-- 🎬 **Content type detection** — Distinguishes Reels vs Posts vs Carousels
-- 👥 **Multiple profiles** — Scrape several profiles in one run
-- 🍪 **Cookie support** — Optionally provide cookies for authenticated access to private profiles
-- 🔄 **4-strategy cascade** — API call, XHR interception, embedded JSON, DOM fallback
-- 🛡️ **Stealth browsing** — Anti-detection with webdriver flag removal and fingerprint spoofing
-- 🌐 **Residential proxy** — Built-in Apify residential proxy support (US)
-- ✅ **Contract validation** — Every item checked against 11 required fields
-- 🤝 **Co-author detection** — Identifies collaboration posts with multiple creators
-- 📷 **Debug screenshots** — Saved to KV Store on failure for troubleshooting
-
-## 📥 Input
-
-| Parameter | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `profiles` | string[] | Yes | — | Instagram usernames to scrape (with or without @) |
-| `maxPosts` | integer | No | 10 | Maximum posts to extract per profile (1-50) |
-| `cookies` | object[] | No | — | Optional browser cookies for authenticated access. Array of {name, value, domain} objects |
-
-### Input Example
-
-```
-{
-  "profiles": ["cristiano", "leomessi", "neymarjr"],
-  "maxPosts": 15
-}
-```
-
-**With cookies for authenticated access:**
-
-```
-{
-  "profiles": ["private_account"],
-  "maxPosts": 10,
-  "cookies": [
-    {
-      "name": "sessionid",
-      "value": "your-session-id",
-      "domain": ".instagram.com"
-    }
-  ]
-}
-```
-
-## 📤 Output
-
-| Field | Type | Description |
+| Data type | Description | Example value |
 | --- | --- | --- |
-| `id` | string | Instagram media ID |
-| `shortCode` | string | Short code for the post URL |
-| `url` | string | Full post URL ([https://www.instagram.com/p/{shortCode}/](https://www.instagram.com/p/%7BshortCode%7D/)) |
-| `caption` | string | Full caption text |
-| `timestamp` | string | ISO 8601 creation date |
-| `likesCount` | integer | Number of likes |
-| `commentsCount` | integer | Number of comments |
-| `videoViewCount` | integer | Video view count (Reels and videos only, 0 for photos) |
-| `videoDuration` | number | Video duration in seconds (0 for photos) |
-| `hashtags` | string[] | Hashtags extracted from caption |
-| `displayUrl` | string | Media display/thumbnail URL |
-| `type` | string | Content type: "reel", "post", or "carousel" |
-| `productType` | string | Instagram product type ("clips" for Reels, "feed" for posts) |
-| `isVideo` | boolean | Whether the content is a video |
-| `coauthors` | string[] | Co-author usernames for collaboration posts |
-| `author` | string | Username of the scraped profile |
-| `scrapedAt` | string | ISO 8601 timestamp of when the data was collected |
+| reel_id | Primary identifier (pk or id) | "3727980973477364718" |
+| shortcode | Reel shortcode used in URLs | "DO8cvGViIPu" |
+| reel_url | Canonical URL to the reel | "[https://www.instagram.com/reel/DO8cvGViIPu/](https://www.instagram.com/reel/DO8cvGViIPu/)" |
+| author_username | Reel author’s username | "alnassr" |
+| author_full_name | Author’s full name | "نادي النصر السعودي" |
+| author_is_verified | Verified badge flag | true |
+| caption_text | Full caption text | "🎥 On the 95th Saudi National Day..." |
+| like_count | Total likes | 1258268 |
+| comment_count | Total comments | 12381 |
+| play_count | Total plays | 37796913 |
+| video_url | Direct video asset URL | "[https://scontent-iad3-2.cdninstagram.com/o1/](https://scontent-iad3-2.cdninstagram.com/o1/)..." |
+| thumbnail_url | Thumbnail image URL | "[https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/](https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/)..." |
+| taken_at_iso | ISO timestamp | "2026-...T..." |
+| hashtags | Hashtags parsed from caption | [] |
+| mentions | @mentions parsed from caption | [] |
+| audio_title | Audio display title | "Original audio" |
+| audio_artist | Audio creator/artist (if available) | "alnassr" |
 
-### Output Example
+Notes:
 
-```
-{
-  "id": "3315678901234567890",
-  "shortCode": "DFxRtPqWsYz",
-  "url": "https://www.instagram.com/p/DFxRtPqWsYz/",
-  "caption": "Another hat-trick! What a night at the Bernabeu. #football #cr7 #realmadrid #championsleague",
-  "timestamp": "2026-02-28T21:45:00Z",
-  "likesCount": 8542310,
-  "commentsCount": 47823,
-  "videoViewCount": 32150000,
-  "videoDuration": 29.8,
-  "hashtags": ["football", "cr7", "realmadrid", "championsleague"],
-  "displayUrl": "https://scontent.cdninstagram.com/v/t51.2885-15/428573961_1234567890.jpg",
-  "type": "reel",
-  "productType": "clips",
-  "isVideo": true,
-  "coauthors": [],
-  "author": "cristiano",
-  "scrapedAt": "2026-03-06T15:30:00Z"
-}
-```
+- Additional outputs include media_type, video_duration, view_count, tagged_users, coauthor_usernames, and compliance-friendly flags like is_paid_partnership and has_audio.
+- Full raw reel JSON is preserved in reel_data for advanced use.
+- Export your dataset to JSON, CSV, or Excel via Apify.
 
-## 📋 Use Cases
+## Key features
 
-- 📊 **Influencer Analytics** — Track engagement metrics across multiple influencers
-- 🎯 **Content Strategy** — Analyze what types of content generate the most engagement
-- 🏷️ **Hashtag Research** — Discover trending hashtags in your niche
-- 🔍 **Competitor Monitoring** — Track competitor posting frequency and engagement rates
-- 📈 **Campaign Tracking** — Measure influencer campaign performance over time
-- 🔥 **Viral Content Detection** — Identify posts with unusually high engagement
-- 👂 **Social Listening** — Monitor brand mentions and tagged content
+- 🔁 Robust proxy fallback
+Automatically starts direct, then escalates to datacenter and residential proxies if Instagram rejects requests. Clear logging and retries keep your runs stable at scale.
+- 🧩 Rich reel metadata
+Captures caption_text, hashtags/mentions, video_url, thumbnail_url, play_count, like_count, comment_count, audio_title/artist, tagged_users, coauthor_usernames, and more.
+- 📦 Bulk scraping at scale
+Works as a Bulk Instagram Reels scraper — set maxReels per profile and process large lists of usernames, profile URLs, or shortcodes without manual effort.
+- 💻 Developer-friendly
+Use via the Apify REST API or SDKs in your Instagram Reels scraper Python or Node.js pipelines. Ideal for building an Instagram Reels scraper API into data workflows.
+- 🔌 Automation & integrations
+Trigger via webhooks and schedule runs. Export to Sheets, CSV/Excel, or pipe JSON to warehouses and ETL tools (Make, Zapier, Airbyte, etc.).
+- 🔒 Public data only
+A compliance-aware Instagram Reels profile scraper designed for public content — no login required for public profiles. Great alternative to risky Instagram Reels scraping Chrome extension approaches.
+- 📊 Analytics-ready output
+Flattened fields plus full reel_data ensure both quick analysis and deep-dive research, making it a dependable Instagram Reels analytics scraper.
+- 🛠️ Production reliability
+Clear status logs, HTTP error handling, and proxy rotation help maintain consistent runs for ongoing monitoring and benchmarking.
 
-## ❓ FAQ
+## How to use Instagram Reels Scraper - step by step
 
-**Q: Does the actor work without logging in to Instagram?**
+1. Create or log in to your Apify account.
+2. Open the Instagram Reels Scraper actor.
+3. Add input data:
 
-A: Yes. The actor seeds session cookies by visiting instagram.com homepage first, then uses Instagram's web_profile_info API endpoint. No login or Instagram account is needed for public profiles.
+- Paste Instagram profile URLs (e.g., [https://www.instagram.com/username](https://www.instagram.com/username)).
+- Or provide usernames (e.g., username or @username).
+- You can also enter reel/post shortcodes (e.g., CxYz123AbCd) or full reel/post URLs — the actor normalizes these to the correct profile.
+4. Configure settings:
 
-**Q: Can I scrape private profiles?**
+- maxReels: limit how many reels to collect per profile.
+- proxyConfiguration: choose proxies if needed (the actor will fall back automatically when blocked).
+5. Start the run:
 
-A: Only if you provide valid session cookies from an account that follows the private profile. Use the `cookies` input parameter with at least the `sessionid` cookie.
+- The actor resolves each input to a username and fetches reels with pagination.
+- If a direct connection is rejected, it falls back to datacenter then residential proxies with retries.
+6. Monitor progress in logs and run details.
+7. Download results:
 
-**Q: Why do some posts show 0 likes or 0 video views?**
+- Export datasets to JSON, CSV, or Excel, or pull via the Apify API into your apps and dashboards.
 
-A: If the primary API strategy fails and the actor falls back to DOM extraction (Strategy 4), posts will have URLs but no engagement metrics. The `_dataQuality` field will be set to "dom_only_no_metrics" in those cases.
+Pro Tip: Chain this with an external Instagram Reels video downloader step if you need to store media files — this actor provides video_url for compliant pipelines.
 
-**Q: What is the 4-strategy cascade?**
+## Use cases
 
-A: The actor tries four extraction methods in order: (1) API call with seeded cookies, (2) XHR interception during page navigation, (3) embedded JSON parsing from script tags, (4) DOM link extraction. Each successive strategy is a fallback if the previous one fails.
-
-**Q: How many profiles can I scrape in one run?**
-
-A: There is no hard limit on profiles, but each profile requires a separate browser session. The actor adds a 3-6 second delay between profiles to avoid rate limiting. For large batches, use residential proxy.
-
-## 💰 Pricing
-
-This actor uses **Pay Per Event (PPE)** pricing:
-
-| Metric | Cost |
+| Use case name | Description |
 | --- | --- |
-| `reel-scraped` | $0.04 per post/reel |
+| Marketing analytics – reel benchmarking | Compare play_count, like_count, and captions across competitors to identify winning hooks and creative patterns. |
+| Influencer research – talent tracking | Track author_username, verification, collaborations (coauthor_usernames), and engagement to rank creators in your niche. |
+| Content strategy – hashtag/caption mining | Use hashtags, mentions, and caption_text to cluster topics and inform content briefs. |
+| Brand monitoring – tagged UGC capture | Collect tagged_users and mentions to surface UGC and partnerships for reporting. |
+| Data engineering – API pipeline | Integrate this Instagram Reels scraper API with Python SDKs to populate warehouses for weekly KPI dashboards. |
+| Academic / market research | Export clean JSON/CSV for reproducible studies on media trends, audio usage, or posting cadence. |
+| Creative QA – media checks | Use thumbnail_url and video_url references to audit creative variants in content ops workflows. |
 
-**Example**: Scraping 1,000 post/reels costs $40.00.
+## Why choose Instagram Reels Scraper?
 
-## 🔗 Related Actors
+Built for precision, automation, and reliability — without the instability of browser extensions or ad‑hoc scripts.
 
-- [TikTok Viral Scanner](https://apify.com/viralanalyzer/tiktok-viral-scanner) — TikTok profile and video data
-- [YouTube Fast Scraper](https://apify.com/viralanalyzer/youtube-fast-scraper) — YouTube video metrics
-- [LinkedIn Intelligence](https://apify.com/viralanalyzer/linkedin-intelligence) — LinkedIn profiles and companies
-- [Google Maps BR Scraper](https://apify.com/viralanalyzer/google-maps-br-scraper) — Google Maps business data
+- ✅ Accurate field coverage: Captures the key metadata you need for analysis and enrichment.
+- 🌍 No login for public content: A safe Instagram Reels scraper without login for public profiles.
+- ⚡ Scales with you: Handles batch inputs and maxReels limits for large panels and long‑running monitors.
+- 💻 Developer access: Works seamlessly with Apify’s API and SDKs for Instagram Reels scraper Python or Node pipelines.
+- 🧩 Easy integrations: Export to JSON/CSV/Excel and orchestrate with Make/Zapier or your ETL.
+- 🛡️ Compliance-first: Focused on public data; respects platform responses with robust proxy fallback.
+- 💸 Cost-effective vs. fragile alternatives: Production infrastructure beats DIY maintenance and unreliable plugins.
 
-## 📝 Changelog
+Bottom line: a dependable Instagram Reels URL extractor and metadata engine for teams that need repeatable, analysis-ready data.
 
-### v1.5 (Current)
+## Is it legal / ethical to use Instagram Reels Scraper?
 
-- Cookie seeding phase — visits instagram.com to establish session cookies before scraping
-- API-first strategy (web_profile_info endpoint with seeded cookies)
-- XHR interception for GraphQL responses during page navigation
-- Embedded JSON parsing (multiple patterns: __additionalDataLoaded, _sharedData, data-sjs)
-- DOM fallback for post/reel link extraction
-- Stealth browsing with webdriver flag removal and fingerprint spoofing
-- Residential proxy support (US)
-- User-provided cookies for authenticated access to private profiles
-- Contract validation on every item (11 required fields)
-- Debug screenshots saved to KV Store on failure
-- Co-author detection for collaboration posts
-- PPE billing via Actor.charge()
+Yes — when used responsibly. This actor extracts publicly available information and does not access private profiles or authenticated data.
 
----
+Guidelines to follow:
 
-# 📸 Instagram Reels & Posts Scraper — Métricas e Engajamento
+- Collect public content only and avoid private/profile-restricted data.
+- Ensure your use complies with applicable laws (e.g., GDPR/CCPA) and platform terms.
+- Apply data minimization, secure storage, and retention policies.
+- Consult your legal team for edge cases and jurisdiction-specific requirements.
 
-> 🇺🇸 English | 🇧🇷 Português
+## Input parameters & output format
 
-Extraia **posts, Reels e Carrosséis do Instagram** com métricas de engajamento completas. Obtenha curtidas, comentários, visualizações de vídeo, hashtags, legendas e tipo de conteúdo de qualquer perfil público. Scraping multi-estratégia com Playwright, cookie seeding, interceptação de API, parsing de JSON embutido e extração DOM. Sem necessidade de API key.
-
-## ✨ Funcionalidades
-
-- 📝 **Posts, Reels e Carrosséis** — Extraia todos os tipos de conteúdo de perfis públicos
-- 📊 **Métricas de engajamento completas** — Curtidas, comentários, visualizações de vídeo, duração
-- 🏷️ **Extração de hashtags** — Extração automática das legendas
-- 🎬 **Detecção de tipo de conteúdo** — Distingue Reels vs Posts vs Carrosséis
-- 👥 **Múltiplos perfis** — Extraia vários perfis em uma única execução
-- 🍪 **Suporte a cookies** — Forneça cookies opcionais para acesso autenticado a perfis privados
-- 🔄 **Cascata de 4 estratégias** — Chamada API, interceptação XHR, JSON embutido, fallback DOM
-- 🛡️ **Navegação stealth** — Anti-detecção com remoção de flag webdriver e spoofing de fingerprint
-- 🌐 **Proxy residencial** — Suporte integrado a proxy residencial Apify (US)
-- ✅ **Validação de contrato** — Todo item verificado contra 11 campos obrigatórios
-- 🤝 **Detecção de co-autores** — Identifica posts colaborativos com múltiplos criadores
-- 📷 **Screenshots de debug** — Salvos no KV Store em caso de falha para troubleshooting
-
-## 📥 Entrada
-
-| Parâmetro | Tipo | Obrigatório | Padrão | Descrição |
-| --- | --- | --- | --- | --- |
-| `profiles` | string[] | Sim | — | Nomes de usuário do Instagram (com ou sem @) |
-| `maxPosts` | inteiro | Não | 10 | Máximo de posts por perfil (1-50) |
-| `cookies` | objeto[] | Não | — | Cookies opcionais para acesso autenticado. Array de objetos {name, value, domain} |
-
-### Exemplo de Entrada
+Example JSON input
 
 ```
 {
-  "profiles": ["cristiano", "leomessi", "neymarjr"],
-  "maxPosts": 15
+  "urls": [
+    "https://www.instagram.com/mrbeast",
+    "cristiano"
+  ],
+  "maxReels": 10,
+  "proxyConfiguration": {
+    "useApifyProxy": false
+  }
 }
 ```
 
-**Com cookies para acesso autenticado:**
+Input fields
+
+- urls (array)
+
+- Description: List of Instagram profile URLs (e.g., [https://www.instagram.com/username](https://www.instagram.com/username)), usernames (e.g., username), or shortcodes (e.g., CxYz123AbCd). Supports full URLs, @username, username, reel shortcodes, and post shortcodes.
+- Default: none
+- Required: no
+- maxReels (integer)
+
+- Description: Maximum number of reels to scrape per profile
+- Default: 10 (min: 1, max: 1000)
+- Required: no
+- proxyConfiguration (object)
+
+- Description: Choose which proxies to use. If Instagram rejects the proxy, a residential proxy will be used as a fallback.
+- Default: {"useApifyProxy": false}
+- Required: no
+
+Example JSON output
 
 ```
 {
-  "profiles": ["conta_privada"],
-  "maxPosts": 10,
-  "cookies": [
-    {
-      "name": "sessionid",
-      "value": "seu-session-id",
-      "domain": ".instagram.com"
+  "username": "cristiano",
+  "scraped_at": 1758818318.2891665,
+  "sort_order": "newest",
+  "max_comments": 50,
+  "reel_id": "3727980973477364718",
+  "shortcode": "DO8cvGViIPu",
+  "reel_url": "https://www.instagram.com/reel/DO8cvGViIPu/",
+  "author_username": "alnassr",
+  "author_full_name": "نادي النصر السعودي",
+  "author_is_verified": true,
+  "author_profile_pic_url": "https://scontent-iad3-2.cdninstagram.com/v/t51.2885-19/498707137_18506209855018981_4274309452484658175_n.jpg",
+  "caption_text": "🎥\nOn the 95th Saudi National Day 🇸🇦\nCristiano Ronaldo shares a message with the Saudi people 💚",
+  "like_count": 1258268,
+  "comment_count": 12381,
+  "play_count": 37796913,
+  "view_count": 0,
+  "video_duration": 47.5,
+  "media_type": 2,
+  "video_url": "https://scontent-iad3-2.cdninstagram.com/o1/v/t2/f2/m86/AQPoU7c34SRUiZGbnIlMHGjjNlE2vEINoSOB1D9xT8K3LSVWseTYD1eCY5MlfT6a....mp4",
+  "thumbnail_url": "https://scontent-iad3-2.cdninstagram.com/v/t51.82787-15/553463806_18529709899018981_4493947018023838808_n.jpg",
+  "taken_at": 1758630037,
+  "taken_at_iso": "2026-...T...",
+  "hashtags": [],
+  "mentions": [],
+  "hashtags_count": 0,
+  "mentions_count": 0,
+  "audio_title": "Original audio",
+  "audio_artist": "alnassr",
+  "tagged_users": [
+    "cristiano"
+  ],
+  "tagged_users_count": 1,
+  "coauthor_usernames": [
+    "cristiano"
+  ],
+  "coauthor_count": 1,
+  "is_paid_partnership": false,
+  "has_audio": true,
+  "can_viewer_save": true,
+  "reel_data": {
+    "media": {
+      "pk": "3727980973477364718",
+      "code": "DO8cvGViIPu",
+      "user": {
+        "username": "alnassr",
+        "is_verified": true
+      },
+      "video_versions": [
+        {
+          "url": "https://scontent-iad3-2.cdninstagram.com/o1/v/t2/f2/m86/AQPoU7c34SRUiZGbnIlM....mp4"
+        }
+      ]
     }
-  ]
+  }
 }
 ```
 
-## 📤 Saída
+Notes:
 
-| Campo | Tipo | Descrição |
-| --- | --- | --- |
-| `id` | string | ID da mídia no Instagram |
-| `shortCode` | string | Código curto da URL do post |
-| `url` | string | URL completa do post ([https://www.instagram.com/p/{shortCode}/](https://www.instagram.com/p/%7BshortCode%7D/)) |
-| `caption` | string | Texto completo da legenda |
-| `timestamp` | string | Data de criação ISO 8601 |
-| `likesCount` | inteiro | Número de curtidas |
-| `commentsCount` | inteiro | Número de comentários |
-| `videoViewCount` | inteiro | Contagem de visualizações de vídeo (apenas Reels e vídeos, 0 para fotos) |
-| `videoDuration` | número | Duração do vídeo em segundos (0 para fotos) |
-| `hashtags` | string[] | Hashtags extraídas da legenda |
-| `displayUrl` | string | URL da mídia/thumbnail |
-| `type` | string | Tipo de conteúdo: "reel", "post" ou "carousel" |
-| `productType` | string | Tipo de produto Instagram ("clips" para Reels, "feed" para posts) |
-| `isVideo` | boolean | Se o conteúdo é vídeo |
-| `coauthors` | string[] | Usernames de co-autores em posts colaborativos |
-| `author` | string | Username do perfil extraído |
-| `scrapedAt` | string | Timestamp ISO 8601 de quando os dados foram coletados |
+- Fields like hashtags, mentions, audio_title, audio_artist, tagged_users, and coauthor_usernames may be empty if not present.
+- Each item includes reel_data with the raw JSON for advanced processing.
 
-### Exemplo de Saída
+## FAQ
 
-```
-{
-  "id": "3315678901234567890",
-  "shortCode": "DFxRtPqWsYz",
-  "url": "https://www.instagram.com/p/DFxRtPqWsYz/",
-  "caption": "Another hat-trick! What a night at the Bernabeu. #football #cr7 #realmadrid #championsleague",
-  "timestamp": "2026-02-28T21:45:00Z",
-  "likesCount": 8542310,
-  "commentsCount": 47823,
-  "videoViewCount": 32150000,
-  "videoDuration": 29.8,
-  "hashtags": ["football", "cr7", "realmadrid", "championsleague"],
-  "displayUrl": "https://scontent.cdninstagram.com/v/t51.2885-15/428573961_1234567890.jpg",
-  "type": "reel",
-  "productType": "clips",
-  "isVideo": true,
-  "coauthors": [],
-  "author": "cristiano",
-  "scrapedAt": "2026-03-06T15:30:00Z"
-}
-```
+### Do I need to log in to use this Instagram Reels Scraper?
 
-## 📋 Casos de Uso
+No. It works on public profiles without login. The actor fetches public endpoints and includes smart proxy fallback to keep requests reliable.
 
-- 📊 **Análise de Influenciadores** — Acompanhe métricas de engajamento de múltiplos influenciadores
-- 🎯 **Estratégia de Conteúdo** — Analise quais tipos de conteúdo geram mais engajamento
-- 🏷️ **Pesquisa de Hashtags** — Descubra hashtags em tendência no seu nicho
-- 🔍 **Monitoramento de Concorrência** — Acompanhe frequência de postagem e taxas de engajamento
-- 📈 **Rastreamento de Campanhas** — Meça performance de campanhas com influenciadores ao longo do tempo
-- 🔥 **Detecção de Conteúdo Viral** — Identifique posts com engajamento excepcionalmente alto
-- 👂 **Social Listening** — Monitore menções à marca e conteúdo marcado
+### Can I use this with Python or via an API?
 
-## ❓ Perguntas Frequentes
+Yes. Access the dataset through Apify’s REST API or integrate with the Apify SDKs in your Instagram Reels scraper Python pipelines and automation workflows.
 
-**P: O actor funciona sem fazer login no Instagram?**
+### How many reels can I scrape per profile?
 
-R: Sim. O actor semeia cookies de sessão visitando a homepage do instagram.com primeiro, depois usa o endpoint web_profile_info da API do Instagram. Nenhum login ou conta do Instagram é necessário para perfis públicos.
+You can control this with the maxReels input (1 to 1000, default 10). The actor paginates through reels and stops when your limit is reached or when no more items are available.
 
-**P: Posso extrair dados de perfis privados?**
+### Does it download videos?
 
-R: Apenas se você fornecer cookies de sessão válidos de uma conta que segue o perfil privado. Use o parâmetro de entrada `cookies` com pelo menos o cookie `sessionid`.
+It doesn’t download files. Instead, it returns video_url so you can connect a separate Instagram Reels video downloader step if you need to store media.
 
-**P: Por que alguns posts mostram 0 curtidas ou 0 visualizações de vídeo?**
+### Can I input reel URLs or shortcodes instead of usernames?
 
-R: Se a estratégia primária de API falhar e o actor recorrer à extração DOM (Estratégia 4), os posts terão URLs mas sem métricas de engajamento. O campo `_dataQuality` será definido como "dom_only_no_metrics" nesses casos.
+Yes. You can provide profile URLs, usernames, @usernames, reel shortcodes, post shortcodes, and full reel/post URLs. The actor normalizes these to the correct profile automatically.
 
-**P: O que é a cascata de 4 estratégias?**
+### What metrics are included for analytics?
 
-R: O actor tenta quatro métodos de extração em ordem: (1) chamada API com cookies semeados, (2) interceptação XHR durante navegação da página, (3) parsing de JSON embutido de tags script, (4) extração de links DOM. Cada estratégia sucessiva é um fallback se a anterior falhar.
+You’ll get play_count, like_count, comment_count, video_duration, timestamps, caption_text, hashtags/mentions, tagged_users, and audio metadata — ideal for dashboards and analysis.
 
-**P: Quantos perfis posso extrair em uma execução?**
+### Is it better than a scraping Chrome extension?
 
-R: Não há limite rígido de perfis, mas cada perfil requer uma sessão de browser separada. O actor adiciona um atraso de 3-6 segundos entre perfis para evitar rate limiting. Para grandes lotes, use proxy residencial.
+For reliability and scale, yes. This Instagram Reels scraper tool runs in the cloud with proxy fallback and exports to JSON/CSV/Excel — no fragile browser setup required.
 
-## 💰 Preços
+### Is scraping Instagram Reels legal?
 
-Este actor usa precificação **Pay Per Event (PPE)**:
+Yes, when done responsibly with public data and in compliance with platform terms and local laws. Avoid private data, follow GDPR/CCPA where applicable, and consult your legal team for specific use cases.
 
-| Métrica | Custo |
-| --- | --- |
-| Por post/reel extraído | $0.05 |
+## Final thoughts
 
-**Exemplo**: Extrair 3 perfis x 10 posts = 30 itens = $1.50.
-
-## 🔗 Actors Relacionados
-
-- [TikTok Viral Scanner](https://apify.com/viralanalyzer/tiktok-viral-scanner) — Dados de perfis e vídeos do TikTok
-- [YouTube Fast Scraper](https://apify.com/viralanalyzer/youtube-fast-scraper) — Métricas do YouTube
-- [LinkedIn Intelligence](https://apify.com/viralanalyzer/linkedin-intelligence) — Perfis e empresas LinkedIn
-- [Google Maps BR Scraper](https://apify.com/viralanalyzer/google-maps-br-scraper) — Dados de empresas do Google Maps
-
-## 📝 Changelog
-
-### v1.5 (Atual)
-
-- Fase de cookie seeding — visita instagram.com para estabelecer cookies de sessão antes do scraping
-- Estratégia API-first (endpoint web_profile_info com cookies semeados)
-- Interceptação XHR para respostas GraphQL durante navegação da página
-- Parsing de JSON embutido (múltiplos padrões: __additionalDataLoaded, _sharedData, data-sjs)
-- Fallback DOM para extração de links post/reel
-- Navegação stealth com remoção de flag webdriver e spoofing de fingerprint
-- Suporte a proxy residencial (US)
-- Cookies do usuário para acesso autenticado a perfis privados
-- Validação de contrato em cada item (11 campos obrigatórios)
-- Screenshots de debug salvos no KV Store em caso de falha
-- Detecção de co-autores em posts colaborativos
-- Integração com cobrança PPE via Actor.charge()
+This Instagram Reels Scraper is built to turn public Reels into structured, analytics-ready data. With robust proxy handling, clean fields, and easy exports, it supports marketers, developers, analysts, and researchers at scale. Plug it into your Instagram Reels scraper API or Python pipeline, automate exports, and start turning Reels metadata into actionable insights.
